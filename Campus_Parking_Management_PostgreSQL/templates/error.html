@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel">
+<h3>Database Connection Error</h3>
+<p>The Flask application is running, but PostgreSQL could not be reached.</p>
+<div class="alert alert-danger">{{ error }}</div>
+<h5>Check these items:</h5>
+<ol>
+<li>PostgreSQL service is running.</li>
+<li>The database <b>campus_parking</b> exists.</li>
+<li>Your <b>.env</b> file contains the correct PostgreSQL password.</li>
+<li>The SQL script was executed in pgAdmin.</li>
+</ol>
+</div>
+{% endblock %}

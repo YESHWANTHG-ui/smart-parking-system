@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div><h2>Vehicles</h2><p class="text-muted">Register and manage campus vehicles.</p></div>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#vehicleModal">+ Register Vehicle</button>
+</div>
+<div class="panel">
+<table class="table table-hover align-middle">
+<thead><tr><th>ID</th><th>Vehicle No.</th><th>Owner</th><th>Type</th><th>Action</th></tr></thead>
+<tbody>
+{% for v in vehicles %}
+<tr>
+<td>{{ v.id }}</td><td><b>{{ v.vehicle_number }}</b></td><td>{{ v.owner_name }}</td><td>{{ v.vehicle_type }}</td>
+<td><form method="post" action="{{ url_for('delete_vehicle', vehicle_id=v.id) }}" onsubmit="return confirm('Delete this vehicle?')"><button class="btn btn-sm btn-outline-danger">Delete</button></form></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+<div class="modal fade" id="vehicleModal">
+<div class="modal-dialog"><form class="modal-content" method="post" action="{{ url_for('add_vehicle') }}">
+<div class="modal-header"><h5>Register Vehicle</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+<label>Vehicle Number</label><input name="vehicle_number" class="form-control mb-3" placeholder="TN37AB1234" required>
+<label>Owner Name</label><input name="owner_name" class="form-control mb-3" required>
+<label>Vehicle Type</label><select name="vehicle_type" class="form-select"><option>Car</option><option>Bike</option><option>EV</option></select>
+</div>
+<div class="modal-footer"><button class="btn btn-primary">Register</button></div>
+</form></div></div>
+{% endblock %}

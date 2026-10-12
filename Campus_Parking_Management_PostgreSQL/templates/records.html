@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Parking Records</h2>
+<p class="text-muted">Complete vehicle entry and exit history.</p>
+<div class="panel">
+<div class="table-responsive">
+<table class="table table-hover align-middle">
+<thead><tr><th>Vehicle</th><th>Owner</th><th>Slot</th><th>Entry</th><th>Exit</th><th>Fee</th><th>Status</th></tr></thead>
+<tbody>
+{% for r in records %}
+<tr>
+<td><b>{{ r.vehicle_number }}</b></td><td>{{ r.owner_name }}</td><td>{{ r.slot_number }}</td>
+<td>{{ r.entry_time.strftime('%d-%m-%Y %H:%M') }}</td>
+<td>{{ r.exit_time.strftime('%d-%m-%Y %H:%M') if r.exit_time else '—' }}</td>
+<td>₹{{ r.fee }}</td>
+<td><span class="badge {{ 'bg-warning-subtle text-warning-emphasis' if r.status=='Parked' else 'bg-success-subtle text-success' }}">{{ r.status }}</span></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+{% endblock %}

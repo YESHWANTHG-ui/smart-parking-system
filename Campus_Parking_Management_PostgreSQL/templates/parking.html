@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Parking Operations</h2>
+<p class="text-muted">Record vehicle entry and exit.</p>
+<div class="row g-4">
+<div class="col-lg-5">
+<div class="panel">
+<h5>Vehicle Entry</h5>
+<form method="post" action="{{ url_for('parking_entry') }}">
+<label class="form-label">Vehicle</label>
+<select name="vehicle_id" class="form-select mb-3" required>
+<option value="">Select vehicle</option>
+{% for v in vehicles %}<option value="{{ v.id }}">{{ v.vehicle_number }} — {{ v.owner_name }}</option>{% endfor %}
+</select>
+<label class="form-label">Available Slot</label>
+<select name="slot_id" class="form-select mb-3" required>
+<option value="">Select slot</option>
+{% for s in slots if s.status == 'Available' %}<option value="{{ s.id }}">{{ s.slot_number }} — {{ s.slot_type }}</option>{% endfor %}
+</select>
+<button class="btn btn-primary w-100">Record Entry</button>
+</form>
+</div>
+</div>
+<div class="col-lg-7">
+<div class="panel">
+<h5>Currently Parked</h5>
+<div class="table-responsive">
+<table class="table align-middle">
+<thead><tr><th>Vehicle</th><th>Slot</th><th>Entry</th><th></th></tr></thead>
+<tbody>
+{% for r in active_records %}
+<tr>
+<td><b>{{ r.vehicle_number }}</b><br><small>{{ r.owner_name }}</small></td>
+<td>{{ r.slot_number }}</td>
+<td>{{ r.entry_time.strftime('%d-%m %H:%M') }}</td>
+<td><form method="post" action="{{ url_for('parking_exit', record_id=r.id) }}" onsubmit="return confirm('Record vehicle exit?')"><button class="btn btn-sm btn-success">Exit</button></form></td>
+</tr>
+{% else %}
+<tr><td colspan="4" class="text-center text-muted py-4">No vehicles currently parked.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

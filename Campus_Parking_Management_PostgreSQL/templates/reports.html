@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Reports</h2>
+<p class="text-muted">Daily parking activity and revenue.</p>
+<div class="panel">
+<table class="table table-hover">
+<thead><tr><th>Date</th><th>Entries</th><th>Exits</th><th>Revenue</th></tr></thead>
+<tbody>
+{% for r in daily %}
+<tr><td>{{ r.day }}</td><td>{{ r.entries }}</td><td>{{ r.exits }}</td><td>₹{{ r.revenue }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

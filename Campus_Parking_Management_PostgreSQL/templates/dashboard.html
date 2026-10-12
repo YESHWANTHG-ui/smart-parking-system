@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div><h2 class="mb-1">Dashboard</h2><p class="text-muted mb-0">Live parking overview from PostgreSQL</p></div>
+  <a class="btn btn-primary" href="{{ url_for('parking') }}">+ Parking Entry</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-3"><div class="stat-card"><span>Total Slots</span><strong>{{ stats.total_slots }}</strong><small>Parking capacity</small></div></div>
+  <div class="col-md-3"><div class="stat-card green"><span>Available</span><strong>{{ stats.available_slots }}</strong><small>Ready for parking</small></div></div>
+  <div class="col-md-3"><div class="stat-card red"><span>Occupied</span><strong>{{ stats.occupied_slots }}</strong><small>Currently occupied</small></div></div>
+  <div class="col-md-3"><div class="stat-card purple"><span>Registered Vehicles</span><strong>{{ stats.vehicles }}</strong><small>Vehicle records</small></div></div>
+  <div class="col-md-3"><div class="stat-card orange"><span>Currently Parked</span><strong>{{ stats.currently_parked }}</strong><small>Active parking</small></div></div>
+  <div class="col-md-3"><div class="stat-card"><span>Today's Entries</span><strong>{{ stats.today_entries }}</strong><small>Vehicles entered</small></div></div>
+  <div class="col-md-3"><div class="stat-card green"><span>Today's Exits</span><strong>{{ stats.today_exits }}</strong><small>Vehicles exited</small></div></div>
+  <div class="col-md-3"><div class="stat-card purple"><span>Today's Revenue</span><strong>₹{{ stats.today_revenue }}</strong><small>Collected fees</small></div></div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-7">
+    <div class="panel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Parking Slot Status</h5>
+        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#slotModal">+ Add Slot</button>
+      </div>
+      <div class="slot-grid">
+        {% for s in slots %}
+        <div class="slot {{ 'occupied' if s.status == 'Occupied' else 'available' }}">
+          <b>{{ s.slot_number }}</b>
+          <span>{{ s.slot_type }}</span>
+          <small>{{ s.status }}</small>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="panel">
+      <h5>Recent Parking Activity</h5>
+      <div class="table-responsive">
+        <table class="table align-middle mt-2">
+          <thead><tr><th>Vehicle</th><th>Slot</th><th>Status</th></tr></thead>
+          <tbody>
+          {% for r in recent %}
+            <tr>
+              <td><b>{{ r.vehicle_number }}</b><br><small>{{ r.owner_name }}</small></td>
+              <td>{{ r.slot_number }}</td>
+              <td><span class="badge {{ 'bg-success-subtle text-success' if r.status == 'Parked' else 'bg-secondary-subtle text-secondary' }}">{{ r.status }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="slotModal">
+  <div class="modal-dialog">
+    <form class="modal-content" method="post" action="{{ url_for('add_slot') }}">
+      <div class="modal-header"><h5>Add Parking Slot</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <label class="form-label">Slot Number</label>
+        <input name="slot_number" class="form-control mb-3" placeholder="C-07" required>
+        <label class="form-label">Slot Type</label>
+        <select name="slot_type" class="form-select">
+          <option>Car</option><option>Bike</option><option>EV</option>
+        </select>
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary">Add Slot</button></div>
+    </form>
+  </div>
+</div>
+{% endblock %}
